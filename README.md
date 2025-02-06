@@ -254,3 +254,306 @@ TextField("Search products...", text: $searchText)
     .background(Color(.systemGray6))
     .cornerRadius(8)
 ```
+
+# Add Product Screen
+
+The `AddProductScreen` allows users to add new products by providing details such as **name, type, price, tax, and an image**. It ensures **input validation**, handles **offline storage**, and supports **automatic uploads** when the network is available.
+
+## Features:
+- Uploads new products to the server.
+- Checks the network connection before performing operations.
+- Stores products locally when offline for seamless user experience.
+- Fetches and uploads stored products automatically when the network is restored.
+- Uses `CoreData` for offline storage.
+- Uses `NWPathMonitor` to detect network status.
+---
+
+## UI Components:
+The `AddProductScreen` is built using SwiftUI and consists of the following elements:
+
+### 1. **CustomTextField** components are used for entering:
+- **Product Name** (`TextField`)
+- **Product Type** (`Picker`)
+- **Price** (`TextField` with number format)
+- **Tax** (`TextField` with number format)
+
+### 2. **Image Picker**
+- Uses `CustomImagePicker` to allow users to select an image for the product.
+
+### 3. **Upload Button**
+- The **"Upload Product"** button triggers validation and submission.
+
+### 4. **Toolbar Navigation**
+- A **house icon button** allows the user to return to the home screen.
+- The **back button is hidden** for a clean navigation experience.
+
+---
+
+## UI Code (SwiftUI)
+The UI consists of a `ScrollView` containing various input fields and a button to upload the product.
+
+```swift
+import SwiftUI
+
+struct AddProductScreen: View {
+    @StateObject var viewModel = AddProductScreenViewModel()
+    @Environment(\.dismiss) var dismiss
+    @State var productName: String = ""
+    @State var price: Int16?
+    @State var tax: Int16?
+    @State var productType: String = ProductType.listOfProductTypes.first ?? ""
+    @State var selectedImage: UIImage?
+    @State var inValid: CurrentInvalid = .OK
+    @FocusState var currentTextField: ProductFieldFocus?
+
+    var body: some View {
+        ScrollView {
+            VStack {
+                CustomTextField(title: "Product Name", symbol: nil, state: $inValid) {
+                    TextField("", text: $productName)
+                        .focused($currentTextField, equals: .productName)
+                        .onSubmit {
+                            currentTextField = .price
+                        }
+                }
+
+                CustomTextField(title: "Product Type", symbol: "@", state: $inValid) {
+                    HStack {
+                        Picker("", selection: $productType) {
+                            ForEach(ProductType.listOfProductTypes, id: \.self) { productType in
+                                Text(productType).tag(productType.description)
+                            }
+                        }
+                        .pickerStyle(.navigationLink)
+                        Spacer()
+                    }
+                }
+
+                CustomTextField(title: "Price", symbol: "$", state: $inValid) {
+                    TextField("", value: $price, format: .number)
+                        .focused($currentTextField, equals: .price)
+                        .onSubmit {
+                            currentTextField = .tax
+                        }
+                }
+
+                CustomTextField(title: "Tax", symbol: "%", state: $inValid) {
+                    TextField("", value: $tax, format: .number)
+                        .focused($currentTextField, equals: .tax)
+                        .onSubmit {
+                            let _ = validateInput()
+                        }
+                }
+
+                HStack {
+                    CustomImagePicker(selectedImage: $selectedImage)
+                    Spacer()
+                }
+
+                Button("Upload Product") {
+                    validateAndUpload()
+                }
+                .buttonBorderShape(.capsule)
+                .buttonStyle(.borderedProminent)
+
+                Spacer()
+            }
+        }
+        .padding()
+        .navigationTitle("Add Product")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "house")
+                }
+            }
+        }
+        .navigationBarBackButtonHidden()
+        .task {
+            await viewModel.upLoadProductsFromLocalStorage()
+        }
+    }
+
+    func validateAndUpload() {
+        if validateInput() {
+            uploadData()
+        }
+    }
+
+    func validateInput() -> Bool {
+        guard productName.count > 3 else { inValid = .productName ; return false }
+        guard !productType.isEmpty else { inValid = .productType ; return false }
+        guard price ?? 0 > 0 else { inValid = .price ; return false }
+        guard tax ?? 0 > 0 && tax ?? 0 < 50 else { inValid = .tax ; return false }
+        inValid = .OK
+        return true
+    }
+
+    func uploadData() {
+        let newProduct = UploadProduct(
+            tax: tax ?? 0,
+            price: price ?? 0,
+            productType: productType,
+            productName: productName,
+            files: selectedImage
+        )
+        Task {
+            await viewModel.upLoadProduct(product: newProduct)
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        AddProductScreen()
+    }
+}
+```
+## AddProduct Screen ViewModel
+
+The `AddProductScreenViewModel` is responsible for managing product uploads, handling network status, and syncing stored data.
+
+### **Responsibilities:**
+- **Product uploads:** Sends product data to the server when online.
+- **Checking the network connection:** Monitors internet availability using `NWPathMonitor`.
+- **Storing products locally when offline:** Uses `CoreDataManager` to store products if there is no internet.
+- **Fetching and uploading stored products when online:** Retrieves unsynced products and uploads them automatically when a connection is restored.
+
+### **Key Functions:**
+#### 1. **`upLoadProduct(product:)`**
+- Uploads a product if the device is online.
+- Stores the product in local storage if offline.
+
+#### 2. **`storeTheProductOffline(product:)`**
+- Saves product details to Core Data when there is no internet.
+
+#### 3. **`setUpTheNetworkMonitor()`**
+- Uses `NWPathMonitor` to detect internet connection status in real-time.
+
+#### 4. **`upLoadProductsFromLocalStorage()`**
+- Fetches products stored in Core Data.
+- Uploads them when the internet is available.
+
+#### 5. **`fetchTheProductsFromLocal()`**
+- Retrieves stored products from Core Data.
+- Deletes them after a successful upload.
+- Updates the flag for pending products.
+
+---
+
+## Usage Flow:
+1. **User enters product details** in the input fields.
+2. **User selects an image** using the image picker.
+3. **Upon tapping "Upload Product"**, the app:
+   - Validates the input fields.
+   - Checks the network status.
+   - If **online**, uploads the product directly.
+   - If **offline**, stores the product locally for later syncing.
+4. When the internet is restored, **stored products are automatically uploaded**.
+
+---
+
+### Code Overview:
+The ViewModel follows the **MVVM pattern** and is marked with `@ObservableObject`, making it reactive to UI changes.
+
+#### Properties:
+- **`networkManager`** – Handles API requests for uploading products.
+- **`coreDataManager`** – Manages offline storage using Core Data.
+- **`monitor`** – Uses `NWPathMonitor` to track internet connectivity status.
+- **`isOnline`** – Tracks whether the user is online.
+- **`isAnyProductStoredLocally`** –  Indicates whether any products are stored offline.
+- **`isThereAnyPendingProducts`** –  Checks for pending products that need to be uploaded..
+
+
+### Network Monitoring:
+
+The ViewModel monitors network connectivity and updates isOnline accordingly.
+```swift
+private func setUpTheNetworkMonitor() {
+    monitor.pathUpdateHandler = { path in
+        DispatchQueue.main.async {
+            self.isOnline = path.status == .satisfied
+        }
+    }
+    let queue = DispatchQueue(label: "Network Monitor")
+    monitor.start(queue: queue)
+    print(isOnline.description)
+}
+```
+- Uses `NWPathMonitor` to track internet status.
+- Updates `isOnline` property when the connection status changes.
+
+### API Integration:
+  
+##### Update Product  
+Uploads a product if the internet is available; otherwise, stores it locally.
+```swift
+func upLoadProduct(product: UploadProduct) async {
+    if isOnline {
+        await networkManager.uploadProduct(product)
+    } else {
+        print("No internet connection: \(isOnline.description)")
+        storeTheProductOffline(product: product)
+        self.isAnyProductStoredLocally = true
+    }
+}
+```
+- If `isOnline` is true, uploads the product via `networkManager`
+- If offline, stores the product in Core Data for later upload.
+
+##### Store Product Offline 
+Saves the product locally in Core Data for future synchronization
+```swift
+func storeTheProductOffline(product: UploadProduct) {
+    coreDataManager.saveProductToCoreData(product: product)
+}
+```
+- Uses coreDataManager to persist product data when offline.
+
+
+##### Upload Pending Products from Local Storage
+Attempts to upload locally stored products when the internet is available.
+```swift
+func upLoadProductsFromLocalStorage() async {
+    if isOnline && (isAnyProductStoredLocally || isThereAnyPendingProducts) {
+        let productsFromLocal = fetchTheProductsFromLocal()
+        
+        await withTaskGroup(of: Void.self) { group in
+            for product in productsFromLocal {
+                group.addTask {
+                    await self.networkManager.uploadProduct(product)
+                    print("Product: \(product) from local uploaded successfully")
+                }
+            }
+        }
+    }
+    isAnyProductStoredLocally = false
+    print("isAnyProductStoredLocally: \(isAnyProductStoredLocally.description) && isThereAnyPendingProducts: \(isThereAnyPendingProducts.description)")
+}
+```
+- Fetches products from local storage.
+- Uses `withTaskGroup` to upload them concurrently.
+- Updates `isAnyProductStoredLocally` after successful uploads.
+
+### Fetching and Deleting Local Products:
+Retrieves and removes stored products from Core Data.
+```swift
+private func fetchTheProductsFromLocal() -> [UploadProduct] {
+    let fetchedProducts = coreDataManager.fetchProductsFromCoreData()
+    print(fetchedProducts.first?.productName as Any)
+    
+    coreDataManager.deleteProductsFromCoreData()
+    isThereAnyPendingProducts = coreDataManager.isThereAnyPendingProducts()
+    return fetchedProducts
+}
+```
+- Fetches stored products from Core Data.
+- Deletes them after fetching.
+- Updates `isThereAnyPendingProducts` accordingly.
+
+
+
+
+
