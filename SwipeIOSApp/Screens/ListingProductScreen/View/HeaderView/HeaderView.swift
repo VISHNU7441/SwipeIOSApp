@@ -9,13 +9,12 @@ import SwiftUI
 struct HeaderView: View {
     var body: some View {
         VStack{
-            // Search bar
             CustomSearchBar()
             VStack(alignment:.leading){
                 Text("Browse Categories")
                     .font(.title3)
                     .bold()
-                CategoryView()
+            CategoryView()
             }
         }
         .toolbar {
@@ -28,7 +27,7 @@ struct HeaderView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    // for any notifications
+                    // for any notifications (Future addition)
                 } label: {
                     Image(systemName: "bell")
                         .foregroundStyle(.black)
@@ -38,8 +37,6 @@ struct HeaderView: View {
                                 .strokeBorder()
                         }
                 }
-                .badge(2)
-            
             }
         }
     }
@@ -47,6 +44,6 @@ struct HeaderView: View {
 
 #Preview {
     NavigationStack{
-        HeaderView()
+        ListingProductsScreen()
     }
 }

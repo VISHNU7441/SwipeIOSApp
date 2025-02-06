@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CustomSearchBar: View {
+    @EnvironmentObject var viewModel:ListProductScreenViewModel
     @State private var searchedTerm:String = ""
+    @FocusState private var isTextFieldFocused
     var body: some View {
         HStack{
             Image(systemName: "magnifyingglass")
@@ -18,9 +20,14 @@ struct CustomSearchBar: View {
                 Text("Search for what you are looking..")
                     .bold()
             }
+            .focused($isTextFieldFocused)
             Image(systemName: "chevron.forward")
                 .imageScale(.small)
-           
+                .onTapGesture {
+                    viewModel.isSearching = false
+                    searchedTerm = ""
+                    isTextFieldFocused = false
+                }
         }
         .padding()
         .background{
@@ -28,10 +35,18 @@ struct CustomSearchBar: View {
                 .strokeBorder()
                 .foregroundStyle(.gray)
         }
-       // .padding(10)
+        .onTapGesture {
+            isTextFieldFocused.toggle()
+        }
+        .onChange(of: searchedTerm) { _ , newValue in
+            viewModel.callTheSearchFunctionWithDebounce(searchTerm: newValue)
+        }
     }
+    
 }
 
 #Preview {
-    CustomSearchBar()
+    NavigationView{
+        CustomSearchBar()
+    }
 }

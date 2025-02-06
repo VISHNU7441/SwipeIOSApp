@@ -9,20 +9,28 @@ import SwiftUI
 
 struct CategoryView: View {
     @EnvironmentObject private var viewModel:ListProductScreenViewModel
+    @State var selectedProduct = ""
     var body: some View {
         ScrollView(.horizontal){
             HStack(spacing: 20){
                 ForEach(viewModel.listOfProductType, id: \.self){ product in
-                        Text(product)
+                    Text(product.description.capitalized)
                             .font(.footnote)
                             .bold()
-                            .lineLimit(2, reservesSpace: true)
+                            .foregroundStyle(selectedProduct == product ? Color.white : Color.black)
+                            .padding(.horizontal, 3)
+                            .background(content: {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(selectedProduct == product ? Color.swipeButtonColour : Color.clear)
+                                    .frame(minWidth: 20, minHeight: 30)
+                                
+                            })
                             .onTapGesture {
-                                // call the products
-                               // viewModel.selectedProductType = product
                                 viewModel.updateListView(selectedType: product)
+                                withAnimation(.easeInOut){
+                                    selectedProduct = product
+                                }
                             }
-  
                 }
             }
           
@@ -32,7 +40,8 @@ struct CategoryView: View {
         .scrollBounceBehavior(.basedOnSize)
     }
 }
-
-//#Preview {
-//    CategoryView()
-//}
+#Preview {
+    NavigationStack{
+        ListingProductsScreen()
+    }
+}
