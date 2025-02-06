@@ -7,12 +7,37 @@
 
 import SwiftUI
 
-struct CustomTextField: View {
+struct CustomTextField<Content:View>: View {
+    let title:String
+    let symbol:String?
+    @Binding var state:CurrentInvalid
+    let content: () -> Content
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment:.leading){
+            Text(title)
+                .foregroundStyle(.secondary)
+            ZStack{
+                HStack{
+                    Text(symbol ?? "")
+                        .foregroundStyle(.swipeButtonColour)
+                    content()
+                }
+            }
+            .frame(minHeight: 30)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder( )
+                .foregroundStyle(state.rawValue == title ? Color.red : .swipeButtonColour)
+        )
     }
 }
 
 #Preview {
-    CustomTextField()
+    NavigationStack{
+        AddProductScreen()
+    }
 }
+
+
