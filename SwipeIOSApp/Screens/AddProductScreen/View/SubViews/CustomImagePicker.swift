@@ -8,8 +8,8 @@
 import SwiftUI
 import PhotosUI
 
-struct ImagePickerView: View {
-    @State var selectedImage: UIImage?
+struct CustomImagePicker: View {
+    @Binding var selectedImage: UIImage?
     @State private var pickerItem: PhotosPickerItem?
 
     var body: some View {
@@ -67,6 +67,4 @@ struct ImagePickerView: View {
     }
 }
 
-#Preview {
-    ImagePickerView()
-}
+
