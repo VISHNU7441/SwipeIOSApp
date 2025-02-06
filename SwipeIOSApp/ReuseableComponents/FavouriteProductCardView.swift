@@ -6,10 +6,9 @@
 //
 import SwiftUI
 
-struct ProductCardView: View {
+struct FavouriteProductCardView: View {
     @ObservedObject var viewModel:ListProductScreenViewModel
     let product:Product
-    @State private var isFavourite = false
     var body: some View {
         VStack(alignment:.leading){
             ZStack{
@@ -41,10 +40,10 @@ struct ProductCardView: View {
                     .font(.title3)
                     .lineLimit(1, reservesSpace: false)
                     .multilineTextAlignment(.leading)
-                Text(String(format: "Rs %.2f", product.price))
+                Text(String(format: "Rs %.2f", product.price ?? 0))
                     .font(.title2)
                     .bold()
-                Text(String(format: "Tax: %.1f", product.tax))
+                Text(String(format: "Tax: %.1f", product.tax ?? 0))
                     .font(.subheadline)
                     .padding(5)
                     .background{
@@ -54,7 +53,7 @@ struct ProductCardView: View {
             }
             .padding(.leading, 1)
         }
-        .frame(maxWidth: 130)
+        .frame(width: 130, height: 200)
         .padding()
         .background{
             RoundedRectangle(cornerRadius: 20)
@@ -62,23 +61,17 @@ struct ProductCardView: View {
                 .shadow(radius: 7)
         }
         .overlay(alignment:.topTrailing) {
-            Image(systemName: "heart.fill")
-                .foregroundStyle(isFavourite ? Color.red.opacity(0.6) : Color.white )
+            Image(systemName: "xmark")
                 .padding()
-                .background(.secondary.opacity(0.4))
+                .background(.secondary.opacity(0.1))
                 .clipShape(Circle())
                 .onTapGesture {
-                    isFavourite.toggle()
+                    viewModel.removeProductFromFavouriteList(product: product)
                 }
         }
-        .onChange(of: isFavourite){
-            if isFavourite{
-                viewModel.updateListOfFavouriteProducts(product: product)
-            }else{
-                viewModel.removeProductFromFavouriteList(product: product)
-            }
-            
-        }
-       
     }
+}
+
+#Preview {
+    FavouriteProductCardView(viewModel: ListProductScreenViewModel(), product: .sampleData)
 }
