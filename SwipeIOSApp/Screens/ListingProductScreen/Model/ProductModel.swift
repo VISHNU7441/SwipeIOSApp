@@ -15,7 +15,6 @@ struct Product:Identifiable, Codable{
     let productType:String
     let tax:Double?
 
-    
     enum CodingKeys: String, CodingKey{
         case image, price, tax
         case productName = "product_name"
@@ -28,13 +27,3 @@ struct Product:Identifiable, Codable{
                                     productType: "Product",
                                     tax: 10)
 }
-
-/*
- {
-     "image": "",
-     "price": 100,
-     "product_name": "test11",
-     "product_type": "test",
-     "tax": 5
-   },
- */

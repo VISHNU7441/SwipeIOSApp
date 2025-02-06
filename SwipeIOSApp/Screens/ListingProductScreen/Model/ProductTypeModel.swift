@@ -7,14 +7,8 @@
 
 import Foundation
 
-enum ProductType: String, CaseIterable{
-    case all  = "common"
-    case furniture
-    case product
-    case books
-    case electronics
-    case gardening
-    case sports
+enum ProductType{
+    static var listOfProductTypes:[String] = ["Electronics", "Clothing", "Grocery", "Books","Movies", "Phones"]
 }
 
 
