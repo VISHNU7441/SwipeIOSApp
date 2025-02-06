@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+enum CurrentInvalid:String{
+    case productName = "Product Name"
+    case productType = "Product Type"
+    case price = "Price"
+    case tax = "Tax"
+    case OK
+}

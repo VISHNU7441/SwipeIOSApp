@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+enum ProductFieldFocus:Hashable{
+    case productName
+    case price
+    case tax
+}
