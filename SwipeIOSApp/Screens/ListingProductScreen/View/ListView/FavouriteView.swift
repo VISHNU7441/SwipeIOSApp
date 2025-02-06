@@ -17,7 +17,7 @@ struct FavouriteView: View {
             ScrollView(.horizontal, showsIndicators: false){
                 HStack{
                     ForEach(viewModel.listOfFavouriteProducts){ product in
-                        FavouriteProductCardView(product: product)
+                        FavouriteProductCardView(viewModel: viewModel, product: product)
                     }
                 }
                 .padding()
@@ -26,4 +26,5 @@ struct FavouriteView: View {
         }
     }
 }
+
 
