@@ -14,13 +14,13 @@ struct ContentView: View {
                 Image("swipeLogo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 200, height: 100)
+                    .frame(maxWidth: 200, maxHeight: 100)
                
             }
-            .frame(height: 300, alignment: .center)
+            .frame(minHeight: 300, alignment: .center)
             .overlay(alignment:.bottomTrailing){
-                Button {
-                   
+                NavigationLink {
+                    ListingProductsScreen()
                 } label: {
                     Image(systemName: "chevron.forward")
                         .foregroundStyle(.white)
@@ -29,10 +29,8 @@ struct ContentView: View {
                         .background{
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(.swipeButtonColour)
-            
                         }
                 }
-
             }
             .padding()
         }

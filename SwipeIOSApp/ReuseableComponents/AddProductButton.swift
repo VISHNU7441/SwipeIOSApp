@@ -9,7 +9,15 @@ import SwiftUI
 
 struct AddProductButton: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Circle()
+            .fill(.swipeButtonColour)
+            .frame(width: 70)
+            .overlay {
+                Image(systemName: "plus")
+                    .imageScale(.large)
+                    .font(.title2)
+                    .foregroundStyle(.white)
+            }
     }
 }
 
