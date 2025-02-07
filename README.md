@@ -617,7 +617,7 @@ private func fetchTheProductsFromLocal() -> [UploadProduct] {
 - Uses `async/await` for upload operations.
 - Handles JSON decoding and error management.
 
-## Implementation
+### Implementation
 
 ### Singleton Instance
 ```swift
@@ -648,7 +648,7 @@ Stores Combine subscriptions to manage memory efficiently.
 
 ## Methods
 
-### fetchData()
+### 1) fetchData()
 Fetches an array of `Product` objects from the API.
 
 #### Definition
@@ -687,7 +687,7 @@ NetworkManager.shared.fetchData()
 
 ---
 
-### uploadProduct(_:)
+### 2) uploadProduct(_:)
 Uploads product details, including an optional image, using `multipart/form-data`.
 
 #### Definition
@@ -710,7 +710,7 @@ Task {
 
 ---
 
-### createFormDataBody(product:boundary:)
+### 3) createFormDataBody(product:boundary:)
 Creates the multipart form-data body for uploading products.
 
 #### Definition
