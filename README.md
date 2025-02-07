@@ -157,7 +157,7 @@ func updateListOfProducts() {
         .store(in: &networkManager.cancellable)
 }
 ```
-##### Update Product List Based on Category
+#### Update Product List Based on Category 
 Filters products based on selected category.
 ```swift
 func updateListView(selectedType: String) {
