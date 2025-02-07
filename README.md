@@ -498,11 +498,11 @@ The `AddProductScreenViewModel` is responsible for managing product uploads, han
 ## Usage Flow:
 1. **User enters product details** in the input fields.
 2. **User selects an image** using the image picker.
-3. **Upon tapping "Upload Product"**, the app:
-- a) Validates the input fields.
-- b) Checks the network status.
-- c) If **online**, uploads the product directly.
-- d) If **offline**, stores the product locally for later syncing.
+3. **Upon tapping "Upload Product"**, the app:<br>
+ a) Validates the input fields.<br>
+ b) Checks the network status<br>
+ c) If **online**, uploads the product directly.<br>
+ d) If **offline**, stores the product locally for later syncing.<br>
 4. When the internet is restored, **stored products are automatically uploaded**.
 
 ---
@@ -539,7 +539,7 @@ private func setUpTheNetworkMonitor() {
 
 ### API Integration:
   
-##### Update Product  
+#### Update Product  
 Uploads a product if the internet is available; otherwise, stores it locally.
 ```swift
 func upLoadProduct(product: UploadProduct) async {
@@ -555,7 +555,7 @@ func upLoadProduct(product: UploadProduct) async {
 - If `isOnline` is true, uploads the product via `networkManager`
 - If offline, stores the product in Core Data for later upload.
 
-##### Store Product Offline 
+#### Store Product Offline 
 Saves the product locally in Core Data for future synchronization
 ```swift
 func storeTheProductOffline(product: UploadProduct) {
@@ -565,7 +565,7 @@ func storeTheProductOffline(product: UploadProduct) {
 - Uses coreDataManager to persist product data when offline.
 
 
-##### Upload Pending Products from Local Storage
+#### Upload Pending Products from Local Storage
 Attempts to upload locally stored products when the internet is available.
 ```swift
 func upLoadProductsFromLocalStorage() async {
@@ -634,13 +634,13 @@ The class uses `Foundation` for networking and `Combine` for reactive programmin
 
 ## Properties
 
-### `baseURL`
+#### baseURL
 ```swift
 let baseURL = "https://app.getswipe.in/api/public/"
 ```
 Defines the base URL for API requests.
 
-### `cancellable`
+#### cancellable
 ```swift
 var cancellable = Set<AnyCancellable>()
 ```
@@ -648,7 +648,7 @@ Stores Combine subscriptions to manage memory efficiently.
 
 ## Methods
 
-### `fetchData()`
+### fetchData()
 Fetches an array of `Product` objects from the API.
 
 #### Definition
@@ -687,7 +687,7 @@ NetworkManager.shared.fetchData()
 
 ---
 
-### `uploadProduct(_:)`
+### uploadProduct(_:)
 Uploads product details, including an optional image, using `multipart/form-data`.
 
 #### Definition
@@ -710,7 +710,7 @@ Task {
 
 ---
 
-### `createFormDataBody(product:boundary:)`
+### createFormDataBody(product:boundary:)
 Creates the multipart form-data body for uploading products.
 
 #### Definition
@@ -733,7 +733,7 @@ Loops through the dictionary and appends key-value pairs as form data.
 
 ## Data Models
 
-### `Product`
+### Product
 ```swift
 struct Product: Codable {
     let id: Int
@@ -743,7 +743,7 @@ struct Product: Codable {
 }
 ```
 
-### `UploadProduct`
+### UploadProduct
 ```swift
 struct UploadProduct {
     let productName: String
@@ -780,10 +780,10 @@ static let shared = CoreDataManager()
 
 ## Properties
 
-### `persistentContainer`
+### persistentContainer
 A `NSPersistentContainer` instance responsible for managing the Core Data stack.
 
-### `context`
+### context
 Provides access to `NSManagedObjectContext`, used for performing operations on Core Data entities.
 
 ```swift
@@ -794,28 +794,28 @@ var context: NSManagedObjectContext {
 
 ## Methods
 
-### `saveProductToCoreData(product: UploadProduct)`
+#### saveProductToCoreData(product: UploadProduct)
 Saves a `UploadProduct` instance to Core Data as a `PendingProduct`.
 
 ```swift
 func saveProductToCoreData(product: UploadProduct)
 ```
 
-### `fetchProductsFromCoreData() -> [UploadProduct]`
+#### fetchProductsFromCoreData() -> [UploadProduct]
 Fetches all `PendingProduct` entities and converts them to `UploadProduct` instances.
 
 ```swift
 func fetchProductsFromCoreData() -> [UploadProduct]
 ```
 
-### `deleteProductsFromCoreData()`
+#### deleteProductsFromCoreData()
 Deletes all pending products stored in Core Data.
 
 ```swift
 func deleteProductsFromCoreData()
 ```
 
-### `isThereAnyPendingProducts() -> Bool`
+#### isThereAnyPendingProducts() -> Bool
 Checks if there are any pending products in Core Data.
 
 ```swift
@@ -824,28 +824,28 @@ func isThereAnyPendingProducts() -> Bool
 
 ### Handling Favorite Products
 
-#### `saveFavouriteProductToCoreData(product: Product)`
+#### saveFavouriteProductToCoreData(product: Product)
 Saves a `Product` as a favorite in Core Data.
 
 ```swift
 func saveFavouriteProductToCoreData(product: Product)
 ```
 
-#### `fetchFavouriteProductFromCoreData() -> [Product]`
+#### fetchFavouriteProductFromCoreData() -> [Product]
 Fetches all favorite products stored in Core Data.
 
 ```swift
 func fetchFavouriteProductFromCoreData() -> [Product]
 ```
 
-#### `deleteFavouriteProductFromCoreData(product: Product)`
+#### deleteFavouriteProductFromCoreData(product: Product)
 Deletes a specific favorite product from Core Data.
 
 ```swift
 func deleteFavouriteProductFromCoreData(product: Product)
 ```
 
-#### `isProductAvailableInFavoriteList(product: Product) -> Bool`
+#### isProductAvailableInFavoriteList(product: Product) -> Bool
 Checks if a product exists in the favorite list.
 
 ```swift
