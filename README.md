@@ -1007,6 +1007,8 @@ catch {
     print("Unable to fetch the products from CoreData")
     return []
 }
+```
+
 #### Project Details
 * App Name: SwipeIOSApp
 * Version: 1.0.0
