@@ -7,8 +7,8 @@ This document provides a step-by-step guide to building the iOS assignment using
 1. [Project Setup](#project-setup)
 2. [Product Listing Screen](#product-listing-screen)
 3. [Add Product Screen](#add-product-screen)
-4. [Network Manager](#network manager)
-5. [CoreData Manager](#coredata manager)
+4. [Network Manager](#network-manager)
+5. [CoreData Manager](#coredata-manager)
 6. [Testing](#testing)
 7. [Conclusion](#conclusion)
 
