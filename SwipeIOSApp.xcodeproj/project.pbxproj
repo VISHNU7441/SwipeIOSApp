@@ -10,9 +10,41 @@
 		F362BFA92D4CA177005F0C46 /* SwipeIOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwipeIOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F3B783112D5602D40052A98D /* Exceptions for "SwipeIOSApp" folder in "SwipeIOSApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AddProductScreen/ViewModel/AddProductScreenViewModel.swift,
+				ListingProductScreen/Model/ProductModel.swift,
+				ListingProductScreen/Model/ProductTypeModel.swift,
+				ListingProductScreen/View/CategoryView.swift,
+				ListingProductScreen/View/CustomSearchBar.swift,
+				ListingProductScreen/View/HeaderView.swift,
+				ListingProductScreen/View/HeaderView/CategoryView.swift,
+				ListingProductScreen/View/HeaderView/CustomSearchBar.swift,
+				ListingProductScreen/View/HeaderView/HeaderView.swift,
+				ListingProductScreen/View/ListingProductsScreen.swift,
+				ListingProductScreen/View/ListView/FavouriteView.swift,
+				ListingProductScreen/ViewModel/ListProductScreenViewModel.swift,
+				Screens/AddProductScreen/ListingProductScreen/Model/ProductModel.swift,
+				Screens/AddProductScreen/ListingProductScreen/Model/ProductTypeModel.swift,
+				Screens/AddProductScreen/ListingProductScreen/View/HeaderView/CategoryView.swift,
+				Screens/AddProductScreen/ListingProductScreen/View/HeaderView/CustomSearchBar.swift,
+				Screens/AddProductScreen/ListingProductScreen/View/HeaderView/HeaderView.swift,
+				Screens/AddProductScreen/ListingProductScreen/View/ListingProductsScreen.swift,
+				Screens/AddProductScreen/ListingProductScreen/View/ListView/FavouriteView.swift,
+				Screens/AddProductScreen/ListingProductScreen/ViewModel/ListProductScreenViewModel.swift,
+			);
+			target = F362BFA82D4CA177005F0C46 /* SwipeIOSApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F362BFAB2D4CA177005F0C46 /* SwipeIOSApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F3B783112D5602D40052A98D /* Exceptions for "SwipeIOSApp" folder in "SwipeIOSApp" target */,
+			);
 			path = SwipeIOSApp;
 			sourceTree = "<group>";
 		};
