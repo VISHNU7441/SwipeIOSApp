@@ -754,7 +754,7 @@ struct UploadProduct {
 }
 ```
 
-## Error Handling
+### Error Handling
 - If the URL is invalid, an error message is printed.
 - If the network request fails, the error is caught and printed.
 
@@ -798,28 +798,84 @@ var context: NSManagedObjectContext {
 Saves a `UploadProduct` instance to Core Data as a `PendingProduct`.
 
 ```swift
-func saveProductToCoreData(product: UploadProduct)
+ func saveProductToCoreData(product:UploadProduct){
+        let newPendingProduct = PendingProduct(context: context)
+        newPendingProduct.tax = product.tax
+        newPendingProduct.price = product.price
+        newPendingProduct.productName = product.productName
+        newPendingProduct.productType = product.productType
+        newPendingProduct.imageData = product.files?.jpegData(compressionQuality: 0.8)
+        
+        do{
+            try context.save()
+            print("successfully saved to core data")
+        }catch{
+            print("unable to save the product to CoreData due to error:\(error)")
+        }
+    }
+
 ```
 
 #### 2) fetchProductsFromCoreData() -> [UploadProduct]
 Fetches all `PendingProduct` entities and converts them to `UploadProduct` instances.
 
 ```swift
-func fetchProductsFromCoreData() -> [UploadProduct]
+func fetchProductsFromCoreData() -> [UploadProduct]{
+        let request:NSFetchRequest<PendingProduct> = PendingProduct.fetchRequest()
+        do{
+            let result = try context.fetch(request)
+            print("successfully fetched")
+            return result.map{ $0.toUploadProduct()}
+        }
+        catch{
+            print("Unable to fetch the products from CoreData")
+            return []
+        }
+    }
+
+
 ```
 
 #### 3) deleteProductsFromCoreData()
 Deletes all pending products stored in Core Data.
 
 ```swift
-func deleteProductsFromCoreData()
+  func deleteProductsFromCoreData(){
+        let request:NSFetchRequest<PendingProduct> = PendingProduct.fetchRequest()
+        do{
+            let result = try context.fetch(request)
+            for pendingProduct in result{
+                print("delete in CoreData , product:\(pendingProduct.productName ?? "")")
+                context.delete(pendingProduct)
+            }
+            try context.save()
+            print("successfully delete the products.")
+        }
+        catch{
+            print("Unable to delete the products")
+        }
+    }
+
+
 ```
 
 #### 4) isThereAnyPendingProducts() -> Bool
 Checks if there are any pending products in Core Data.
 
 ```swift
-func isThereAnyPendingProducts() -> Bool
+ func isThereAnyPendingProducts() ->Bool{
+        let request:NSFetchRequest<PendingProduct> = PendingProduct.fetchRequest()
+        do{
+            let result = try context.fetch(request)
+            return result.count != 0
+            
+        }catch{
+            print("unable to check the pending products in Core Data")
+            return false
+        }
+    }
+
+
 ```
 
 ### Handling Favorite Products
@@ -829,6 +885,9 @@ Saves a `Product` as a favorite in Core Data.
 
 ```swift
 func saveFavouriteProductToCoreData(product: Product)
+
+
+
 ```
 
 #### 6) fetchFavouriteProductFromCoreData() -> [Product]
@@ -836,6 +895,9 @@ Fetches all favorite products stored in Core Data.
 
 ```swift
 func fetchFavouriteProductFromCoreData() -> [Product]
+
+
+
 ```
 
 #### 7) deleteFavouriteProductFromCoreData(product: Product)
@@ -843,6 +905,9 @@ Deletes a specific favorite product from Core Data.
 
 ```swift
 func deleteFavouriteProductFromCoreData(product: Product)
+
+
+
 ```
 
 #### 8) isProductAvailableInFavoriteList(product: Product) -> Bool
@@ -850,6 +915,9 @@ Checks if a product exists in the favorite list.
 
 ```swift
 func isProductAvailableInFavoriteList(product: Product) -> Bool
+
+
+
 ```
 
 ### Error Handling
