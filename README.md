@@ -619,20 +619,20 @@ private func fetchTheProductsFromLocal() -> [UploadProduct] {
 
 ### Implementation
 
-### Singleton Instance
+#### Singleton Instance
 ```swift
 static let shared = NetworkManager()
 ```
 This ensures that there is a single shared instance of `NetworkManager` throughout the app.
 
-### Dependencies
+##### Dependencies
 ```swift
 import Foundation
 import Combine
 ```
 The class uses `Foundation` for networking and `Combine` for reactive programming.
 
-## Properties
+### Properties
 
 #### baseURL
 ```swift
@@ -646,17 +646,17 @@ var cancellable = Set<AnyCancellable>()
 ```
 Stores Combine subscriptions to manage memory efficiently.
 
-## Methods
+### Methods
 
-### 1) fetchData()
+#### 1) fetchData()
 Fetches an array of `Product` objects from the API.
 
-#### Definition
+##### Definition
 ```swift
 func fetchData() -> AnyPublisher<[Product], Error>
 ```
 
-#### Implementation
+##### Implementation
 ```swift
 let publisher = URLSession.shared.dataTaskPublisher(for: url)
     .map(\.data)
@@ -669,7 +669,7 @@ let publisher = URLSession.shared.dataTaskPublisher(for: url)
     .eraseToAnyPublisher()
 ```
 
-#### Usage
+##### Usage
 ```swift
 NetworkManager.shared.fetchData()
     .sink(receiveCompletion: { completion in
@@ -687,21 +687,21 @@ NetworkManager.shared.fetchData()
 
 ---
 
-### 2) uploadProduct(_:)
+#### 2) uploadProduct(_:)
 Uploads product details, including an optional image, using `multipart/form-data`.
 
-#### Definition
+##### Definition
 ```swift
 func uploadProduct(_ product: UploadProduct) async
 ```
 
-#### Implementation
+##### Implementation
 ```swift
 let (data, response) = try await URLSession.shared.upload(for: request, from: body)
 ```
 Handles the network request asynchronously using Swift's `async/await`.
 
-#### Usage
+##### Usage
 ```swift
 Task {
     await NetworkManager.shared.uploadProduct(uploadProductInstance)
@@ -710,15 +710,15 @@ Task {
 
 ---
 
-### 3) createFormDataBody(product:boundary:)
+#### 3) createFormDataBody(product:boundary:)
 Creates the multipart form-data body for uploading products.
 
-#### Definition
+##### Definition
 ```swift
 private func createFormDataBody(product: UploadProduct, boundary: String) -> Data
 ```
 
-#### Implementation
+##### Implementation
 ```swift
 let parameters: [String: String] = [
     "product_name": product.productName,
@@ -771,19 +771,19 @@ The `CoreDataManager` class is responsible for managing Core Data operations, in
 - Saves, fetches, and deletes favorite products
 - Checks if a product is in the favorite list
 
-## Singleton Instance
+#### Singleton Instance
 The `CoreDataManager` follows the Singleton pattern, ensuring that only one instance of the class exists.
 
 ```swift
 static let shared = CoreDataManager()
 ```
 
-## Properties
+### Properties
 
-### persistentContainer
+#### persistentContainer
 A `NSPersistentContainer` instance responsible for managing the Core Data stack.
 
-### context
+#### context
 Provides access to `NSManagedObjectContext`, used for performing operations on Core Data entities.
 
 ```swift
@@ -792,30 +792,30 @@ var context: NSManagedObjectContext {
 }
 ```
 
-## Methods
+### Methods
 
-#### saveProductToCoreData(product: UploadProduct)
+#### 1) saveProductToCoreData(product: UploadProduct)
 Saves a `UploadProduct` instance to Core Data as a `PendingProduct`.
 
 ```swift
 func saveProductToCoreData(product: UploadProduct)
 ```
 
-#### fetchProductsFromCoreData() -> [UploadProduct]
+#### 2) fetchProductsFromCoreData() -> [UploadProduct]
 Fetches all `PendingProduct` entities and converts them to `UploadProduct` instances.
 
 ```swift
 func fetchProductsFromCoreData() -> [UploadProduct]
 ```
 
-#### deleteProductsFromCoreData()
+#### 3) deleteProductsFromCoreData()
 Deletes all pending products stored in Core Data.
 
 ```swift
 func deleteProductsFromCoreData()
 ```
 
-#### isThereAnyPendingProducts() -> Bool
+#### 4) isThereAnyPendingProducts() -> Bool
 Checks if there are any pending products in Core Data.
 
 ```swift
@@ -824,35 +824,35 @@ func isThereAnyPendingProducts() -> Bool
 
 ### Handling Favorite Products
 
-#### saveFavouriteProductToCoreData(product: Product)
+#### 5) saveFavouriteProductToCoreData(product: Product)
 Saves a `Product` as a favorite in Core Data.
 
 ```swift
 func saveFavouriteProductToCoreData(product: Product)
 ```
 
-#### fetchFavouriteProductFromCoreData() -> [Product]
+#### 6) fetchFavouriteProductFromCoreData() -> [Product]
 Fetches all favorite products stored in Core Data.
 
 ```swift
 func fetchFavouriteProductFromCoreData() -> [Product]
 ```
 
-#### deleteFavouriteProductFromCoreData(product: Product)
+#### 7) deleteFavouriteProductFromCoreData(product: Product)
 Deletes a specific favorite product from Core Data.
 
 ```swift
 func deleteFavouriteProductFromCoreData(product: Product)
 ```
 
-#### isProductAvailableInFavoriteList(product: Product) -> Bool
+#### 8) isProductAvailableInFavoriteList(product: Product) -> Bool
 Checks if a product exists in the favorite list.
 
 ```swift
 func isProductAvailableInFavoriteList(product: Product) -> Bool
 ```
 
-## Error Handling
+### Error Handling
 The class includes error handling mechanisms, printing error messages if operations fail:
 
 ```swift
