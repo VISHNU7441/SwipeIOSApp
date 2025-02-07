@@ -537,7 +537,7 @@ func upLoadProductsFromLocalStorage() async {
 - Uses `withTaskGroup` to upload them concurrently.
 - Updates `isAnyProductStoredLocally` after successful uploads.
 
-### Fetching and Deleting Local Products:
+#### Fetching and Deleting Local Products:
 Retrieves and removes stored products from Core Data.
 ```swift
 private func fetchTheProductsFromLocal() -> [UploadProduct] {
@@ -553,6 +553,158 @@ private func fetchTheProductsFromLocal() -> [UploadProduct] {
 - Deletes them after fetching.
 - Updates `isThereAnyPendingProducts` accordingly.
 
+# NetworkManager
+
+## Overview
+`NetworkManager` is a singleton class responsible for handling network requests, including fetching product data and uploading product details with an optional image to a server. It uses `Combine` for handling asynchronous data fetching and Swift concurrency (`async/await`) for uploading data.
+
+## Features
+- Fetches product data from the API.
+- Uploads product data with multipart/form-data support.
+- Uses `Combine` for fetching operations.
+- Uses `async/await` for upload operations.
+- Handles JSON decoding and error management.
+
+## Implementation
+
+### Singleton Instance
+```swift
+static let shared = NetworkManager()
+```
+This ensures that there is a single shared instance of `NetworkManager` throughout the app.
+
+### Dependencies
+```swift
+import Foundation
+import Combine
+```
+The class uses `Foundation` for networking and `Combine` for reactive programming.
+
+## Properties
+
+### `baseURL`
+```swift
+let baseURL = "https://app.getswipe.in/api/public/"
+```
+Defines the base URL for API requests.
+
+### `cancellable`
+```swift
+var cancellable = Set<AnyCancellable>()
+```
+Stores Combine subscriptions to manage memory efficiently.
+
+## Methods
+
+### `fetchData()`
+Fetches an array of `Product` objects from the API.
+
+#### Definition
+```swift
+func fetchData() -> AnyPublisher<[Product], Error>
+```
+
+#### Implementation
+```swift
+let publisher = URLSession.shared.dataTaskPublisher(for: url)
+    .map(\.data)
+    .decode(type: [Product].self, decoder: JSONDecoder())
+    .map{ value in
+        print(value.count)
+        return value
+    }
+    .receive(on: DispatchQueue.main)
+    .eraseToAnyPublisher()
+```
+
+#### Usage
+```swift
+NetworkManager.shared.fetchData()
+    .sink(receiveCompletion: { completion in
+        switch completion {
+        case .finished:
+            print("Fetch successful")
+        case .failure(let error):
+            print("Fetch failed: \(error)")
+        }
+    }, receiveValue: { products in
+        print("Received \(products.count) products")
+    })
+    .store(in: &NetworkManager.shared.cancellable)
+```
+
+---
+
+### `uploadProduct(_:)`
+Uploads product details, including an optional image, using `multipart/form-data`.
+
+#### Definition
+```swift
+func uploadProduct(_ product: UploadProduct) async
+```
+
+#### Implementation
+```swift
+let (data, response) = try await URLSession.shared.upload(for: request, from: body)
+```
+Handles the network request asynchronously using Swift's `async/await`.
+
+#### Usage
+```swift
+Task {
+    await NetworkManager.shared.uploadProduct(uploadProductInstance)
+}
+```
+
+---
+
+### `createFormDataBody(product:boundary:)`
+Creates the multipart form-data body for uploading products.
+
+#### Definition
+```swift
+private func createFormDataBody(product: UploadProduct, boundary: String) -> Data
+```
+
+#### Implementation
+```swift
+let parameters: [String: String] = [
+    "product_name": product.productName,
+    "product_type": product.productType,
+    "price": String(product.price),
+    "tax": String(product.tax)
+]
+```
+Loops through the dictionary and appends key-value pairs as form data.
+
+---
+
+## Data Models
+
+### `Product`
+```swift
+struct Product: Codable {
+    let id: Int
+    let name: String
+    let price: Double
+    let tax: Double
+}
+```
+
+### `UploadProduct`
+```swift
+struct UploadProduct {
+    let productName: String
+    let productType: String
+    let price: Double
+    let tax: Double
+    let files: UIImage?
+}
+```
+
+## Error Handling
+- If the URL is invalid, an error message is printed.
+- If the network request fails, the error is caught and printed.
 
 
 
