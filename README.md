@@ -425,42 +425,84 @@ The `AddProductScreenViewModel` is responsible for managing product uploads, han
 - Uploads a product if the device is online.
 - Stores the product in local storage if offline.
   ```swift
-  
+  func upLoadProduct(product:UploadProduct) async{
+        if isOnline{
+            await networkManager.uploadProduct(product)
+        }else{
+            print("no internet connection:\(isOnline.description)")
+            storeTheProductOffline(product: product)
+            self.isAnyProductStoredLocally = true
+        }
+    }
   ```
 
 #### 2. **storeTheProductOffline(product:)**
 - Saves product details to Core Data when there is no internet.
   ```swift
-  
+  func storeTheProductOffline(product:UploadProduct){
+        coreDataManager.saveProductToCoreData(product: product)
+    }
   ```
 #### 3. **setUpTheNetworkMonitor()**
 - Uses `NWPathMonitor` to detect internet connection status in real-time.
   ```swift
-  
+   private func setUpTheNetworkMonitor(){
+         monitor.pathUpdateHandler = { path in
+             DispatchQueue.main.async {
+                 self.isOnline = path.status == .satisfied  // update the network status
+             }
+         }
+        let queue = DispatchQueue(label: "Network Monitor")
+        monitor.start(queue: queue)
+        print(isOnline.description)
+     }
   ```
 #### 4. **upLoadProductsFromLocalStorage()**
 - Fetches products stored in Core Data.
 - Uploads them when the internet is available.
   ```swift
-  
+  func upLoadProductsFromLocalStorage() async{
+        if isOnline && (isAnyProductStoredLocally || isThereAnyPendingProducts){
+            let productsFromLocal = fetchTheProductsFromLocal()
+            
+            await withTaskGroup(of: Void.self) { group in
+                for product in productsFromLocal {
+                    group.addTask {
+                        await self.networkManager.uploadProduct(product)
+                        print("Product: \(product) from local uploaded successfully")
+                    }
+                }
+            }
+        }
+        isAnyProductStoredLocally = false
+        print("isAnyProductsStoredLocally:\(isAnyProductStoredLocally.description) && isThereAnyPendingProducts:\(isThereAnyPendingProducts.description)")
+    }
   ```
 #### 5. **fetchTheProductsFromLocal()**
 - Retrieves stored products from Core Data.
 - Deletes them after a successful upload.
 - Updates the flag for pending products.
-  ```swift
-  
-  ```
+ ```swift
+ func fetchTheProductsFromLocal() -> [UploadProduct]{
+        let fetchedProducts = coreDataManager.fetchProductsFromCoreData() // a) will fetch the product
+        print(fetchedProducts.first?.productName as Any)
+        
+        coreDataManager.deleteProductsFromCoreData() // b) delete the product
+        
+        isThereAnyPendingProducts = coreDataManager.isThereAnyPendingProducts()
+        return fetchedProducts
+    }
+ ```
 ---
 
 ## Usage Flow:
 1. **User enters product details** in the input fields.
 2. **User selects an image** using the image picker.
 3. **Upon tapping "Upload Product"**, the app:
-   - Validates the input fields.
-   - Checks the network status.
-   - If **online**, uploads the product directly.
-   - If **offline**, stores the product locally for later syncing.
+- a) Validates the input fields.
+- b) Checks the network status.
+- c) If **online**, uploads the product directly.
+- d) If **offline**, stores the product locally for later syncing.
 4. When the internet is restored, **stored products are automatically uploaded**.
 
 ---
