@@ -2,7 +2,7 @@
 //  CustomImagePicker.swift
 //  SwipeIOSApp
 //
-//  Created by vishnu r s on 04/02/25.
+//  Created by vishnu r s on 07/02/25.
 //
 
 import SwiftUI
@@ -66,5 +66,3 @@ struct CustomImagePicker: View {
         return image
     }
 }
-
-
