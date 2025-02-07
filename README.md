@@ -178,27 +178,27 @@ func updateListView(selectedType: String) {
 ```
 #### Favorites Management:
 Uses Core Data to persist favorite products.
-##### Add to Favorites
+#### Add to Favorites
 ```swift
 func updateListOfFavouriteProducts(product: Product) {
     coreDataManager.saveFavouriteProductToCoreData(product: product)
     self.listOfFavouriteProducts = coreDataManager.fetchFavouriteProductFromCoreData()
 }
 ```
-##### Remove from Favorites
+#### Remove from Favorites
 ```swift
 func removeProductFromFavouriteList(product: Product) {
     coreDataManager.deleteFavouriteProductFromCoreData(product: product)
     self.listOfFavouriteProducts = coreDataManager.fetchFavouriteProductFromCoreData()
 }
 ```
-##### Fetch Favorite Products
+#### Fetch Favorite Products
 ```swift
 func fetchFavouriteProductList() {
     listOfFavouriteProducts = coreDataManager.fetchFavouriteProductFromCoreData()
 }
 ```
-##### Check if Product is in Favorites
+#### Check if Product is in Favorites
 ```swift
 func isThisProductPresentInFavouriteList(product: Product) -> Bool {
     return coreDataManager.isProductAvailableInFavoriteList(product: product)
@@ -207,7 +207,7 @@ func isThisProductPresentInFavouriteList(product: Product) -> Bool {
 #### Search Functionality:
 The search feature filters products dynamically and applies debouncing to reduce API calls.
 
-##### Search Products
+#### Search Products
 ```swift
 func searchResult(searchTerm: String) {
     networkManager.fetchData()
@@ -227,7 +227,7 @@ func searchResult(searchTerm: String) {
         .store(in: &networkManager.cancellable)
 }
 ```
-##### Debounce Search Calls
+#### Debounce Search Calls
 ```swift
 func callTheSearchFunctionWithDebounce(searchTerm: String) {
     isSearching = !searchTerm.isEmpty
@@ -240,11 +240,10 @@ func callTheSearchFunctionWithDebounce(searchTerm: String) {
 ```
 
 •	Uses subject.debounce() to prevent excessive API calls.
-
 •	Calls searchResult(searchTerm:) after a 0.5-second delay.
-##### Connecting the Debounced Search to SwiftUI
-In SearchResultView, you need to call callTheSearchFunctionWithDebounce(searchTerm:) whenever the user types.
 
+#### Connecting the Debounced Search to SwiftUI
+In SearchResultView, you need to call callTheSearchFunctionWithDebounce(searchTerm:) whenever the user types.
 ```swift
 TextField("Search products...", text: $searchText)
     .onChange(of: searchText) { newValue in
@@ -271,19 +270,19 @@ The `AddProductScreen` allows users to add new products by providing details suc
 ## UI Components:
 The `AddProductScreen` is built using SwiftUI and consists of the following elements:
 
-### 1. **CustomTextField** components are used for entering:
+#### 1. *CustomTextField* components 
 - **Product Name** (`TextField`)
 - **Product Type** (`Picker`)
 - **Price** (`TextField` with number format)
 - **Tax** (`TextField` with number format)
 
-### 2. **Image Picker**
+#### 2. **Image Picker**
 - Uses `CustomImagePicker` to allow users to select an image for the product.
 
-### 3. **Upload Button**
+#### 3. **Upload Button**
 - The **"Upload Product"** button triggers validation and submission.
 
-### 4. **Toolbar Navigation**
+#### 4. **Toolbar Navigation**
 - A **house icon button** allows the user to return to the home screen.
 - The **back button is hidden** for a clean navigation experience.
 
@@ -422,25 +421,36 @@ The `AddProductScreenViewModel` is responsible for managing product uploads, han
 - **Fetching and uploading stored products when online:** Retrieves unsynced products and uploads them automatically when a connection is restored.
 
 ### **Key Functions:**
-#### 1. **`upLoadProduct(product:)`**
+#### 1. **upLoadProduct(product:)**
 - Uploads a product if the device is online.
 - Stores the product in local storage if offline.
+  ```swift
+  
+  ```
 
-#### 2. **`storeTheProductOffline(product:)`**
+#### 2. **storeTheProductOffline(product:)**
 - Saves product details to Core Data when there is no internet.
-
-#### 3. **`setUpTheNetworkMonitor()`**
+  ```swift
+  
+  ```
+#### 3. **setUpTheNetworkMonitor()**
 - Uses `NWPathMonitor` to detect internet connection status in real-time.
-
-#### 4. **`upLoadProductsFromLocalStorage()`**
+  ```swift
+  
+  ```
+#### 4. **upLoadProductsFromLocalStorage()**
 - Fetches products stored in Core Data.
 - Uploads them when the internet is available.
-
-#### 5. **`fetchTheProductsFromLocal()`**
+  ```swift
+  
+  ```
+#### 5. **fetchTheProductsFromLocal()**
 - Retrieves stored products from Core Data.
 - Deletes them after a successful upload.
 - Updates the flag for pending products.
-
+  ```swift
+  
+  ```
 ---
 
 ## Usage Flow:
