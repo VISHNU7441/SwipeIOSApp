@@ -7,8 +7,8 @@ This document provides a step-by-step guide to building the iOS assignment using
 1. [Project Setup](#project-setup)
 2. [Product Listing Screen](#product-listing-screen)
 3. [Add Product Screen](#add-product-screen)
-4. [Offline Functionality](#offline-functionality)
-5. [API Integration](#api-integration)
+4. [Network Manager](#network-manager)
+5. [CoreData Manager](#coredata-manager)
 6. [Testing](#testing)
 7. [Conclusion](#conclusion)
 
@@ -27,6 +27,44 @@ This document provides a step-by-step guide to building the iOS assignment using
 - Initialize a Git repository in your project directory:
   ```bash
   git init
+## Cloning and Running the Project
+### 1. Clone the Repository
+To clone the SwipeIOSAPP project from GitHub, follow these steps:
+
+- Open **Terminal** on your Mac.
+
+- Navigate to the directory where you want to clone the project:
+
+ ```bash
+cd /path/to/your/directory
+```
+- Clone the repository using the following command:
+```bash
+git clone https://github.com/your-username/SwipeIOSAPP.git
+```
+Replace your-username with your actual GitHub username and ensure the repository is public.
+
+- Once the cloning is complete, navigate into the project directory:
+
+```bash
+cd SwipeIOSAPP
+```
+
+### 2. Open the Project in Xcode
+Open the SwipeIOSAPP.xcodeproj file in Xcode:
+
+```bash
+open SwipeIOSAPP.xcodeproj
+```
+Xcode will load the project. Ensure that the correct Scheme is selected (usually SwipeIOSAPP > My Mac or SwipeIOSAPP > iPhone Simulator).
+
+### 3. Build and Run the Project
+- Click the Run button (▶️) in the top-left corner of Xcode, or press Cmd + R.
+
+- Xcode will build the project and launch it in the selected simulator or device.
+
+- If everything is set up correctly, the app should run without errors.
+
 
 ## Product Listing Screen
 
