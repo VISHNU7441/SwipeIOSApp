@@ -15,7 +15,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AddProductScreen/ViewModel/AddProductScreenViewModel.swift,
-				CustomImagePicker.swift,
 				ListingProductScreen/Model/ProductModel.swift,
 				ListingProductScreen/Model/ProductTypeModel.swift,
 				ListingProductScreen/View/CategoryView.swift,

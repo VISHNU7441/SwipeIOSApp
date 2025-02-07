@@ -34,10 +34,5 @@ struct CustomTextField<Content:View>: View {
     }
 }
 
-#Preview {
-    NavigationStack{
-        AddProductScreen()
-    }
-}
 
 

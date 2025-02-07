@@ -13,12 +13,11 @@ class AddProductScreenViewModel:ObservableObject{
     private let networkManager = NetworkManager.shared
     private let coreDataManager = CoreDataManager.shared
     private let monitor = NWPathMonitor()
-    @Published private var isOnline:Bool = true
+    @Published var isOnline:Bool = true
     var isAnyProductStoredLocally:Bool = false
     var isThereAnyPendingProducts:Bool = true
     
     init(){
-        print("addVm initialised")
         setUpTheNetworkMonitor()
     }
     // Setup the network for monitor the internet connection
@@ -76,5 +75,7 @@ class AddProductScreenViewModel:ObservableObject{
         isThereAnyPendingProducts = coreDataManager.isThereAnyPendingProducts()
         return fetchedProducts
     }
+    
+    
  
 }
