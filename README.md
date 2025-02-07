@@ -9,8 +9,8 @@ This document provides a step-by-step guide to building the iOS assignment using
 3. [Add Product Screen](#add-product-screen)
 4. [Network Manager](#network-manager)
 5. [CoreData Manager](#coredata-manager)
-6. [Testing](#testing)
-7. [Conclusion](#conclusion)
+6. [Poject Details](#project-details)
+
 
 ---
 
@@ -1007,5 +1007,15 @@ catch {
     print("Unable to fetch the products from CoreData")
     return []
 }
+#### Project Details
+* App Name: SwipeIOSApp
+* Version: 1.0.0
+* Author: Vishnu R S
+
+#### Contact
+* Email: vishnurs74417441@gmail.com
+* LinkedIn: [linkedin.com/in/vishnurs7441](https://www.linkedin.com/in/vishnurs7441)
+* GitHub: [github.com/vishnu7441](https://www.github.com/vishnu7441)
+
 
 
