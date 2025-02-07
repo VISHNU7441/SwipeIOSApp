@@ -7,8 +7,8 @@ This document provides a step-by-step guide to building the iOS assignment using
 1. [Project Setup](#project-setup)
 2. [Product Listing Screen](#product-listing-screen)
 3. [Add Product Screen](#add-product-screen)
-4. [Network Manager](#networkmanager)
-5. [CoreData Manager](#coredatamanager)
+4. [Network Manager](#network manager)
+5. [CoreData Manager](#coredata manager)
 6. [Testing](#testing)
 7. [Conclusion](#conclusion)
 
@@ -643,7 +643,7 @@ private func fetchTheProductsFromLocal() -> [UploadProduct] {
 - Deletes them after fetching.
 - Updates `isThereAnyPendingProducts` accordingly.
 
-## NetworkManager
+## Network Manager
 
 ## Overview
 `NetworkManager` is a singleton class responsible for handling network requests, including fetching product data and uploading product details with an optional image to a server. It uses `Combine` for handling asynchronous data fetching and Swift concurrency (`async/await`) for uploading data.
@@ -796,7 +796,7 @@ struct UploadProduct {
 - If the URL is invalid, an error message is printed.
 - If the network request fails, the error is caught and printed.
 
-## CoreDataManager
+## CoreData Manager
 
 ## Overview
 The `CoreDataManager` class is responsible for managing Core Data operations, including saving, fetching, and deleting `UploadProduct` and `FavouriteProduct` entities.
