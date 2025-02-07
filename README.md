@@ -65,6 +65,23 @@ Xcode will load the project. Ensure that the correct Scheme is selected (usually
 
 - If everything is set up correctly, the app should run without errors.
 
+#### Screenshots
+<table>
+  <tr>
+    <td align="center">
+<img width="317" alt="home view" src="https://github.com/user-attachments/assets/c58327cc-d3fb-4709-8665-c751857802b4" />
+      <br><em>Home View</em>
+    </td>
+    <td align="center">
+      <img width="324" alt="wishlist view" src="https://github.com/user-attachments/assets/44c560c7-7a08-4e46-8fb8-f0bf819b6955" />
+      <br><em>Wishlist View</em>
+    </td>
+    <td align="center">
+<img width="325" alt="cart view" src="https://github.com/user-attachments/assets/c98e464d-c596-49a8-85df-257bb726b9d9" />
+      <br><em>Cart View</em>
+    </td>
+  </tr>
+</table>
 
 ## Product Listing Screen
 
