@@ -884,40 +884,81 @@ Checks if there are any pending products in Core Data.
 Saves a `Product` as a favorite in Core Data.
 
 ```swift
-func saveFavouriteProductToCoreData(product: Product)
-
-
-
+func saveFavouriteProductToCoreData(product:Product){
+        let newFavouriteProduct = FavouriteProduct(context: context)
+        newFavouriteProduct.image = product.image
+        newFavouriteProduct.price = product.price ?? 0
+        newFavouriteProduct.productName = product.productName
+        newFavouriteProduct.productType = product.productType
+        newFavouriteProduct.tax = product.tax ?? 0
+        
+        do{
+            try context.save()
+            print("successfully saved FavouriteProduct to core data")
+        }catch{
+            print("unable to save the FavouriteProduct to CoreData due to error:\(error)")
+        }
+    }
 ```
 
 #### 6) fetchFavouriteProductFromCoreData() -> [Product]
 Fetches all favorite products stored in Core Data.
 
 ```swift
-func fetchFavouriteProductFromCoreData() -> [Product]
-
-
-
+    func fetchFavouriteProductFromCoreData() -> [Product]{
+        print("call the fetch product func")
+        let request:NSFetchRequest<FavouriteProduct> = FavouriteProduct.fetchRequest()
+        do{
+            let result = try context.fetch(request)
+            print("successfully fetched FavouriteProduct")
+            return result.map({$0.toProduct()})
+        }
+        catch{
+            print("Unable to fetch the FavouriteProducts from CoreData")
+            return []
+        }
+    }
 ```
 
 #### 7) deleteFavouriteProductFromCoreData(product: Product)
 Deletes a specific favorite product from Core Data.
 
 ```swift
-func deleteFavouriteProductFromCoreData(product: Product)
-
-
-
+  func deleteFavouriteProductFromCoreData(product:Product){
+        let request:NSFetchRequest<FavouriteProduct> = FavouriteProduct.fetchRequest()
+        do{
+            let result = try context.fetch(request)
+            if let favouriteProductNeedToDelete = result.first(where: {$0.productName == product.productName && $0.price == product.price}){
+                context.delete(favouriteProductNeedToDelete)
+            }
+         
+            try context.save()
+            print("successfully delete the Favouriteproduct.")
+        }
+        catch{
+            print("Unable to delete the products")
+        }
+    }
 ```
 
 #### 8) isProductAvailableInFavoriteList(product: Product) -> Bool
 Checks if a product exists in the favorite list.
 
 ```swift
-func isProductAvailableInFavoriteList(product: Product) -> Bool
-
-
-
+  func isProductAvailableInFavoriteList(product:Product) ->Bool{
+        let request:NSFetchRequest<FavouriteProduct> = FavouriteProduct.fetchRequest()
+        do{
+            let result = try context.fetch(request)
+            if let _ = result.first(where: {$0.productName == product.productName && $0.price == product.price}){
+                return true
+            }else{
+                return false
+            }
+        }catch{
+            print("unable to check the product available or not")
+            return false
+        }
+    }
 ```
 
 ### Error Handling
