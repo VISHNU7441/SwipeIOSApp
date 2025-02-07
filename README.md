@@ -706,6 +706,107 @@ struct UploadProduct {
 - If the URL is invalid, an error message is printed.
 - If the network request fails, the error is caught and printed.
 
+# CoreDataManager
 
+## Overview
+The `CoreDataManager` class is responsible for managing Core Data operations, including saving, fetching, and deleting `UploadProduct` and `FavouriteProduct` entities.
+
+## Features
+- Saves pending products to Core Data
+- Fetches pending products from Core Data
+- Deletes pending products from Core Data
+- Checks if there are any pending products
+- Saves, fetches, and deletes favorite products
+- Checks if a product is in the favorite list
+
+## Singleton Instance
+The `CoreDataManager` follows the Singleton pattern, ensuring that only one instance of the class exists.
+
+```swift
+static let shared = CoreDataManager()
+```
+
+## Properties
+
+### `persistentContainer`
+A `NSPersistentContainer` instance responsible for managing the Core Data stack.
+
+### `context`
+Provides access to `NSManagedObjectContext`, used for performing operations on Core Data entities.
+
+```swift
+var context: NSManagedObjectContext {
+    return persistentContainer.viewContext
+}
+```
+
+## Methods
+
+### `saveProductToCoreData(product: UploadProduct)`
+Saves a `UploadProduct` instance to Core Data as a `PendingProduct`.
+
+```swift
+func saveProductToCoreData(product: UploadProduct)
+```
+
+### `fetchProductsFromCoreData() -> [UploadProduct]`
+Fetches all `PendingProduct` entities and converts them to `UploadProduct` instances.
+
+```swift
+func fetchProductsFromCoreData() -> [UploadProduct]
+```
+
+### `deleteProductsFromCoreData()`
+Deletes all pending products stored in Core Data.
+
+```swift
+func deleteProductsFromCoreData()
+```
+
+### `isThereAnyPendingProducts() -> Bool`
+Checks if there are any pending products in Core Data.
+
+```swift
+func isThereAnyPendingProducts() -> Bool
+```
+
+### Handling Favorite Products
+
+#### `saveFavouriteProductToCoreData(product: Product)`
+Saves a `Product` as a favorite in Core Data.
+
+```swift
+func saveFavouriteProductToCoreData(product: Product)
+```
+
+#### `fetchFavouriteProductFromCoreData() -> [Product]`
+Fetches all favorite products stored in Core Data.
+
+```swift
+func fetchFavouriteProductFromCoreData() -> [Product]
+```
+
+#### `deleteFavouriteProductFromCoreData(product: Product)`
+Deletes a specific favorite product from Core Data.
+
+```swift
+func deleteFavouriteProductFromCoreData(product: Product)
+```
+
+#### `isProductAvailableInFavoriteList(product: Product) -> Bool`
+Checks if a product exists in the favorite list.
+
+```swift
+func isProductAvailableInFavoriteList(product: Product) -> Bool
+```
+
+## Error Handling
+The class includes error handling mechanisms, printing error messages if operations fail:
+
+```swift
+catch {
+    print("Unable to fetch the products from CoreData")
+    return []
+}
 
 
